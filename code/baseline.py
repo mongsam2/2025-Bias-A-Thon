@@ -1,3 +1,4 @@
+import os
 import re
 import ast
 import pandas as pd
@@ -5,16 +6,14 @@ import pandas as pd
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-data = pd.read_csv("./data/test.csv", encoding="utf-8-sig")
+data = pd.read_csv("code/resources/test.csv", encoding="utf-8-sig")
 
 
 # Model Load
 model_name = "meta-llama/Llama-3.1-8B-Instruct"  # 본 대회는 반드시 Llama-3.1-8B-Instruct 모델만 사용해야 합니다.
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(
-    model_name, device_map="auto", use_auth_token=True
-)
+model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", token=True)
 
 
 # 프롬프트 생성 함수
