@@ -8,16 +8,17 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 class LlamaModel:
 
-    def __init__(self, title, prompt_file_name):
+    def __init__(self, title, prompt_file_name, is_test):
         self.title = title
         self.prompt_file_name = prompt_file_name
-        self.data = pd.read_csv("code/resources/test.csv", encoding="utf-8-sig")
+        self.data = pd.read_csv("src/resources/test.csv", encoding="utf-8-sig")
         self.tokenizer = AutoTokenizer.from_pretrained(
             "meta-llama/Llama-3.1-8B-Instruct"
         )
         self.model = AutoModelForCausalLM.from_pretrained(
             "meta-llama/Llama-3.1-8B-Instruct", device_map="auto", token=True
         )
+        self.is_test = is_test
 
     def run(self):
         # 실험 결과 폴더 생성
