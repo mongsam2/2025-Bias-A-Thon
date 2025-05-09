@@ -82,7 +82,7 @@ class LlamaModel:
     def __set_prompt(self, context, question, choices):
         choices = ast.literal_eval(choices)  # 문자열 안에 담겨있는 리스트를 변환
 
-        file_path = os.path.join("src/resources", self.prompt_file_name)
+        file_path = os.path.join("src", "resources", self.prompt_file_name + ".txt")
         with open(file_path, "r", encoding="utf-8") as file:
             prompt_text = file.read()
 
