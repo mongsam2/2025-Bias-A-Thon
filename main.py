@@ -13,11 +13,11 @@ def main():
     parser.add_argument("--test", action="store_true")
     args = parser.parse_args()
 
-    llama = LlamaModel(
-        title=args.title, prompt_file_name=args.prompt, is_test=args.test
-    )
+    llama = LlamaModel(title=args.title, prompt_file_name=args.prompt)
 
     print("Load llama model")
+
+    llama.run(is_test=args.test)
 
 
 if __name__ == "__main__":
