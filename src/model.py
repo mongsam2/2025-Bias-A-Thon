@@ -11,7 +11,7 @@ class LlamaModel:
     def __init__(self, title, prompt_file_name, is_test):
         self.title = title
         self.prompt_file_name = prompt_file_name
-        self.data = pd.read_csv("code/resources/test.csv", encoding="utf-8-sig")
+        self.data = pd.read_csv("src/resources/test.csv", encoding="utf-8-sig")
         self.tokenizer = AutoTokenizer.from_pretrained(
             "meta-llama/Llama-3.1-8B-Instruct"
         )
