@@ -16,7 +16,7 @@ class LlamaModel:
             "meta-llama/Llama-3.1-8B-Instruct"
         )
         self.model = AutoModelForCausalLM.from_pretrained(
-            "meta-llama/Llama-3.1-8B-Instruct", device_map="auto", token=True
+            "meta-llama/Llama-3.1-8B-Instruct", device_map="cuda", token=True, torch_dtype=torch.float16
         )
 
     def run(self, is_test):
