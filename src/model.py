@@ -8,7 +8,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 class LlamaModel:
 
-    def __init__(self, title, prompt_file_name, is_test):
+    def __init__(self, title, prompt_file_name):
         self.title = title
         self.prompt_file_name = prompt_file_name
         self.data = pd.read_csv("src/resources/test.csv", encoding="utf-8-sig")
@@ -18,33 +18,39 @@ class LlamaModel:
         self.model = AutoModelForCausalLM.from_pretrained(
             "meta-llama/Llama-3.1-8B-Instruct", device_map="auto", token=True
         )
-        self.is_test = is_test
 
-    def run(self):
-        # 실험 결과 폴더 생성
-        submission_dir = os.path.join("submissions", self.title)
+    def run(self, is_test):
+        # 실험 결과 OR 파이프라인 테스트용 폴더 생성
+        submission_dir = (
+            os.path.join("submissions", self.title)
+            if not is_test
+            else os.path.join("test", self.title)
+        )
         os.makedirs(submission_dir, exist_ok=True)
 
-        for i in range(len(self.data)):
-            row = self.data.loc[i]
+        inference_data = self.data if not is_test else self.data.iloc[:10].copy()
+        checkpoint_count = 5000 if not is_test else 5
+
+        for i in range(len(inference_data)):
+            row = inference_data.loc[i]
             result = self.__inference(row["context"], row["question"], row["choices"])
 
             # 결과 저장
-            self.data.at[i, "raw_input"] = result["raw_input"]
-            self.data.at[i, "raw_output"] = result["raw_output"]
-            self.data.at[i, "answer"] = result["answer"]
+            inference_data.at[i, "raw_input"] = result["raw_input"]
+            inference_data.at[i, "raw_output"] = result["raw_output"]
+            inference_data.at[i, "answer"] = result["answer"]
 
             # 5000개마다 중간 저장
-            if i % 5000 == 0:
+            if i % checkpoint_count == 0:
                 submission_path = os.path.join(submission_dir, f"checkpoint_{i}.csv")
 
-                print(f"✅ Processing {i}/{len(self.data)} — 중간 저장 중...")
+                print(f"✅ Processing {i}/{len(inference_data)} — 중간 저장 중...")
 
-                self.data[["ID", "raw_input", "raw_output", "answer"]].to_csv(
+                inference_data[["ID", "raw_input", "raw_output", "answer"]].to_csv(
                     submission_path, index=False, encoding="utf-8-sig"
                 )
 
-        submission = self.data[["ID", "raw_input", "raw_output", "answer"]]
+        submission = inference_data[["ID", "raw_input", "raw_output", "answer"]]
         submission.to_csv(
             os.path.join(submission_dir, "baseline_submission.csv"),
             index=False,
@@ -76,7 +82,7 @@ class LlamaModel:
     def __set_prompt(self, context, question, choices):
         choices = ast.literal_eval(choices)  # 문자열 안에 담겨있는 리스트를 변환
 
-        file_path = os.path.join("code/resources", self.prompt_file_name)
+        file_path = os.path.join("src", "resources", self.prompt_file_name + ".txt")
         with open(file_path, "r", encoding="utf-8") as file:
             prompt_text = file.read()
 
