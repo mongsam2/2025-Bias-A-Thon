@@ -39,6 +39,7 @@ dependencies = [
     { name = "huggingface-hub" },
     { name = "pandas" },
     { name = "torch" },
+    { name = "tqdm" },
     { name = "transformers" },
 ]
 
@@ -49,6 +50,7 @@ requires-dist = [
     { name = "huggingface-hub", specifier = ">=0.30.2" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "torch", specifier = ">=2.7.0" },
+    { name = "tqdm", specifier = ">=4.67.1" },
     { name = "transformers", specifier = ">=4.51.3" },
 ]
 

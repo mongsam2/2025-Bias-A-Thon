@@ -1,6 +1,7 @@
 import re
 import os
 import ast
+from tqdm import tqdm
 import torch
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -34,7 +35,7 @@ class LlamaModel:
         inference_data = self.data if not is_test else self.data.iloc[:10].copy()
         checkpoint_count = 5000 if not is_test else 5
 
-        for i in range(len(inference_data)):
+        for i in tqdm(range(len(inference_data)), desc="Inference"):
             row = inference_data.loc[i]
             result = self.__inference(row["context"], row["question"], row["choices"])
 
