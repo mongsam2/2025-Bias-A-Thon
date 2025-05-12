@@ -98,6 +98,6 @@ class LlamaModel:
 
     def __extract_answer(self, text):
         raw_answer = text.split("답변:")[-1].strip()  # 프롬프트를 제외한 답변만 추출
-        result = re.search(r"답변:\s*([^\n\r:]+)", text)  # 정규 표현식으로 답변 추출
+        result = raw_answer  # re.search(r"답변:\s*([^\n\r:]+)", text)  # 정규 표현식으로 답변 추출
         answer = result.group(1).strip() if result else None
         return raw_answer, answer
