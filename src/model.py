@@ -37,7 +37,10 @@ class LlamaModel:
 
         for i in tqdm(range(len(inference_data)), desc="Inference"):
             row = inference_data.loc[i]
-            result = self.__inference(row["context"], row["question"], row["choices"])
+            context = row["context"]
+            question = row["question"]
+            choices = ast.literal_eval(row["choices"])
+            result = self.__inference(context, question, choices)
 
             # 결과 저장
             inference_data.at[i, "raw_input"] = result["raw_input"]
@@ -77,27 +80,32 @@ class LlamaModel:
                 pad_token_id=self.tokenizer.eos_token_id,
             )
         result = self.tokenizer.decode(output[-1], skip_special_tokens=True)
-        raw_answer, answer = self.__extract_answer(result)
+        raw_answer, answer = self.__extract_answer(result, choices)
 
         return pd.Series(
             {"raw_input": prompt, "raw_output": raw_answer, "answer": answer}
         )
 
     def __set_prompt(self, context, question, choices):
-        choices = ast.literal_eval(choices)  # 문자열 안에 담겨있는 리스트를 변환
-
         file_path = os.path.join("src", "resources", self.prompt_file_name + ".txt")
         with open(file_path, "r", encoding="utf-8") as file:
             prompt_text = file.read()
 
         return (
-            f"{prompt_text}\n\n"
-            f"[입력]\n"
+            f"{prompt_text}\n"
             f"질문: {context} {question}\n"
             f"선택지: {choices[0]}, {choices[1]}, {choices[2]}\n"
         )
 
-    def __extract_answer(self, text):
-        raw_answer = text.split("[출력]")[-1]  # 프롬프트를 제외한 답변만 추출
-        result = raw_answer.split("답변:")[-1]
-        return raw_answer, result
+    def __extract_answer(self, text, choices):
+        print(text)
+        response = text.split("[풀어야 할 문제]\n")[1]
+        raw_answer = response  # 예시 프롬프트를 제외한 답변만 추출
+        result = response.split("답변: ")[1]
+        answer = "알 수 없음"
+
+        for choice in choices:
+            if choice in result:
+                answer = choice
+
+        return raw_answer, answer
