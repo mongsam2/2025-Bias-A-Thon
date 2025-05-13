@@ -90,12 +90,13 @@ class LlamaModel:
         with open(file_path, "r", encoding="utf-8") as file:
             prompt_text = file.read()
 
-        return f"""{prompt_text}
-
-                [입력]
-                질문 : {context} {question}
-                선택지: {choices[0]} ,{choices[1]} ,{choices[2]}
-                [출력]"""
+        return (
+            f"{prompt_text}\n\n"
+            f"[입력]\n"
+            f"질문: {context} {question}\n"
+            f"선택지: {choices[0]}, {choices[1]}, {choices[2]}\n"
+            f"[출력]"
+        )
 
     def __extract_answer(self, text):
         raw_answer = text.split("답변:")[-1].strip()  # 프롬프트를 제외한 답변만 추출
