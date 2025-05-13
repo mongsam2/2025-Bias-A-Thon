@@ -98,7 +98,7 @@ class LlamaModel:
         )
 
     def __extract_answer(self, text):
-        result = re.findall(r"\[출력시작\]\s*(답변:\s*.*)\[출력끝\]", text)
+        result = re.findall(r"\[출력시작\]\s*(답변:\s*.*)\s*\[출력끝\]", text)
         raw_answer = result[-1]  # 프롬프트를 제외한 답변만 추출
         result = re.findall(r"답변: .*\s*")[-1].split("답변: ")[-1]
         return raw_answer, result
