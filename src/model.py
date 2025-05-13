@@ -51,7 +51,7 @@ class LlamaModel:
             if i % checkpoint_count == 0:
                 submission_path = os.path.join(submission_dir, f"checkpoint_{i}.csv")
 
-                print(f"✅ Processing {i}/{len(inference_data)} — 중간 저장 중...")
+                #print(f"✅ Processing {i}/{len(inference_data)} — 중간 저장 중...")
 
                 inference_data[["ID", "raw_input", "raw_output", "answer"]].to_csv(
                     submission_path, index=False, encoding="utf-8-sig"
