@@ -51,7 +51,7 @@ class LlamaModel:
             if i % checkpoint_count == 0:
                 submission_path = os.path.join(submission_dir, f"checkpoint_{i}.csv")
 
-                #print(f"✅ Processing {i}/{len(inference_data)} — 중간 저장 중...")
+                # print(f"✅ Processing {i}/{len(inference_data)} — 중간 저장 중...")
 
                 inference_data[["ID", "raw_input", "raw_output", "answer"]].to_csv(
                     submission_path, index=False, encoding="utf-8-sig"
@@ -100,7 +100,8 @@ class LlamaModel:
     def __extract_answer(self, text, choices):
         response = text.split("[풀어야 할 문제]\n")[1]
         raw_answer = response  # 예시 프롬프트를 제외한 답변만 추출
-        result = response.split("답변: ")[1]
+        response_splited = response.split("답변: ")[1]
+        result = "알 수 없음" if len(response_splited) == 0 else response_splited[1]
         answer = "알 수 없음"
 
         for choice in choices:
