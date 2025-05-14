@@ -59,7 +59,7 @@ class LlamaModel:
 
         submission = inference_data[["ID", "raw_input", "raw_output", "answer"]]
         submission.to_csv(
-            os.path.join(submission_dir, "baseline_submission.csv"),
+            os.path.join(submission_dir, "submission.csv"),
             index=False,
             encoding="utf-8-sig",
         )
