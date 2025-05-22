@@ -98,14 +98,10 @@ class LlamaModel:
         )
 
     def __extract_answer(self, text, choices):
-        response = text.split("[풀어야 할 문제]\n")[1]
-        raw_answer = response  # 예시 프롬프트를 제외한 답변만 추출
-        response_splited = response.split("답변: ")[1]
-        result = "알 수 없음" if len(response_splited) == 0 else response_splited[1]
-        answer = "알 수 없음"
-
+        raw_answer = text.split("답변: ")[-1]
+        answer = ""
         for choice in choices:
-            if choice in result:
+            if choice in raw_answer:
                 answer = choice
 
         return raw_answer, answer
