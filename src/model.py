@@ -93,8 +93,11 @@ class LlamaModel:
 
         return (
             f"{prompt_text}\n\n"
-            f"질문: {context} {question}\n"
-            f"선택지: {choices[0]}, {choices[1]}, {choices[2]}\n"
+            "[문제]\n"
+            f"1: {context} {choices[0]}\n"
+            f"2: {context} {choices[1]}\n"
+            f"3: {context} {choices[2]}\n"
+            "답: "
         )
 
     def __extract_answer(self, text, choices):
