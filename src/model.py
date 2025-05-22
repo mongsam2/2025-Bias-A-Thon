@@ -92,7 +92,7 @@ class LlamaModel:
             prompt_text = file.read()
 
         return (
-            f"{prompt_text}\n"
+            f"{prompt_text}\n\n"
             f"질문: {context} {question}\n"
             f"선택지: {choices[0]}, {choices[1]}, {choices[2]}\n"
         )
